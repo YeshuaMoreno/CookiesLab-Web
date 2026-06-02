@@ -1,6 +1,12 @@
 from pathlib import Path
 from decouple import config, Csv
 
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    pass
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-local-cookieslab-change-me')

@@ -9,13 +9,25 @@ class CustomerOrder(models.Model):
         DELIVERED = 'delivered', 'Entregado'
         CANCELLED = 'cancelled', 'Cancelado'
 
+    class PaymentMethod(models.TextChoices):
+        CASH = 'efectivo', 'Efectivo'
+        TRANSFER = 'transferencia', 'Transferencia / SPEI'
+        OXXO = 'oxxo', 'Depósito OXXO'
+        OTHER = 'otro', 'Otro / A definir'
+
     customer_name = models.CharField('nombre del cliente', max_length=120)
-    phone = models.CharField('teléfono', max_length=20)
+    phone = models.CharField('teléfono / WhatsApp', max_length=20)
     delivery_place = models.CharField('lugar de entrega', max_length=180, blank=True)
     delivery_datetime = models.DateTimeField('fecha/hora deseada', blank=True, null=True)
-    notes = models.TextField('notas', blank=True)
+    payment_method = models.CharField(
+        'método de pago',
+        max_length=20,
+        choices=PaymentMethod.choices,
+        blank=True,
+    )
+    notes = models.TextField('notas adicionales', blank=True)
     status = models.CharField('estado', max_length=20, choices=Status.choices, default=Status.PENDING)
-    whatsapp_message = models.TextField('mensaje de WhatsApp', blank=True)
+    whatsapp_message = models.TextField('mensaje de WhatsApp generado', blank=True)
     created_at = models.DateTimeField('creado', auto_now_add=True)
     updated_at = models.DateTimeField('actualizado', auto_now=True)
 
@@ -25,7 +37,7 @@ class CustomerOrder(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Pedido #{self.pk} - {self.customer_name}'
+        return f'Pedido #{self.pk} — {self.customer_name}'
 
     @property
     def total(self):
