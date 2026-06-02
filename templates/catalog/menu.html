@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Menú | {{ business.business_name }}{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="mb-8">
+        <p class="font-black uppercase tracking-widest text-amber-700">Menú</p>
+        <h1 class="text-5xl font-black">Arma tu pedido</h1>
+        <p class="mt-3 max-w-2xl text-amber-900/75">Selecciona productos y cantidades. El botón genera un mensaje listo para WhatsApp.</p>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div class="grid gap-6 md:grid-cols-2">
+            {% for product in products %}
+                <article id="{{ product.slug }}" class="rounded-3xl bg-white p-4 shadow">
+                    <div class="aspect-square overflow-hidden rounded-2xl bg-amber-100 flex items-center justify-center">
+                        {% if product.image %}<img class="h-full w-full object-cover" src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}<span class="text-6xl">🍪</span>{% endif %}
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-900">{{ product.get_status_display }}</span>
+                            <span class="text-xl font-black">${{ product.price }}</span>
+                        </div>
+                        <h2 class="mt-3 text-2xl font-black">{{ product.name }}</h2>
+                        <p class="mt-2 text-sm text-amber-900/70">{{ product.description }}</p>
+                        {% if product.is_orderable %}
+                            <button class="mt-4 w-full rounded-full bg-amber-900 px-5 py-3 font-black text-white hover:bg-amber-800"
+                                    data-add-product
+                                    data-id="{{ product.id }}"
+                                    data-name="{{ product.name }}"
+                                    data-price="{{ product.price }}">
+                                Agregar al pedido
+                            </button>
+                        {% else %}
+                            <button disabled class="mt-4 w-full rounded-full bg-stone-200 px-5 py-3 font-black text-stone-500">No disponible</button>
+                        {% endif %}
+                    </div>
+                </article>
+            {% empty %}
+                <div class="rounded-3xl bg-white p-8 shadow md:col-span-2">Aún no hay productos visibles. Agrega productos desde el admin.</div>
+            {% endfor %}
+        </div>
+
+        <aside class="h-fit rounded-3xl bg-amber-950 p-6 text-white shadow-2xl lg:sticky lg:top-24">
+            <h2 class="text-2xl font-black">Tu pedido</h2>
+            <div id="cart-items" class="mt-5 space-y-3 text-amber-50/90">
+                <p class="text-amber-100">Aún no has agregado productos.</p>
+            </div>
+            <div class="mt-5 border-t border-amber-800 pt-5">
+                <div class="flex justify-between text-xl font-black">
+                    <span>Total estimado</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <label class="mt-5 block text-sm font-bold text-amber-100" for="customer-name">Nombre</label>
+                <input id="customer-name" class="mt-2 w-full rounded-2xl border-0 px-4 py-3 text-amber-950" placeholder="Tu nombre">
+                <label class="mt-4 block text-sm font-bold text-amber-100" for="delivery-place">Lugar/hora</label>
+                <input id="delivery-place" class="mt-2 w-full rounded-2xl border-0 px-4 py-3 text-amber-950" placeholder="Facultad, punto o dirección">
+                <a id="whatsapp-order" href="#" class="mt-5 block rounded-full bg-green-500 px-5 py-3 text-center font-black text-white hover:bg-green-600">Enviar por WhatsApp</a>
+                <p class="mt-3 text-xs text-amber-100">El total es estimado. Confirma disponibilidad y entrega por WhatsApp.</p>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<script>
+window.COOKIESLAB_WHATSAPP = "{{ business.whatsapp_number|default:'' }}";
+window.COOKIESLAB_NAME = "{{ business.business_name|escapejs }}";
+</script>
+{% endblock %}

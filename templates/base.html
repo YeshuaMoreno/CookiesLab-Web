@@ -1,0 +1,65 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ business.business_name }}{% endblock %}</title>
+    <meta name="description" content="{{ business.slogan }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="min-h-screen bg-[#fff7ed] text-[#2f1b12]">
+    <header class="sticky top-0 z-40 border-b border-amber-100 bg-[#fff7ed]/90 backdrop-blur">
+        <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+            <a href="{% url 'core:home' %}" class="flex items-center gap-2 font-black tracking-tight text-2xl">
+                <span class="rounded-2xl bg-amber-900 px-3 py-2 text-white">🍪</span>
+                <span>{{ business.business_name }}</span>
+            </a>
+            <div class="hidden items-center gap-6 text-sm font-semibold md:flex">
+                <a class="hover:text-amber-700" href="{% url 'core:home' %}">Inicio</a>
+                <a class="hover:text-amber-700" href="{% url 'catalog:menu' %}">Menú</a>
+                <a class="hover:text-amber-700" href="{% url 'orders:create' %}">Pedido</a>
+                {% if business.instagram_url %}<a class="hover:text-amber-700" href="{{ business.instagram_url }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+                <a class="rounded-full bg-amber-900 px-5 py-2 text-white shadow hover:bg-amber-800" href="{% url 'catalog:menu' %}">Pedir ahora</a>
+            </div>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <section class="mx-auto max-w-6xl px-4 pt-4">
+            {% for message in messages %}
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">{{ message }}</div>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-16 border-t border-amber-100 bg-amber-950 text-amber-50">
+        <div class="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-3">
+            <div>
+                <h2 class="text-2xl font-black">{{ business.business_name }}</h2>
+                <p class="mt-2 text-amber-100">{{ business.slogan }}</p>
+            </div>
+            <div>
+                <h3 class="font-bold">Entregas</h3>
+                <p class="mt-2 text-amber-100">{{ business.delivery_notes }}</p>
+            </div>
+            <div>
+                <h3 class="font-bold">Contacto</h3>
+                <p class="mt-2 text-amber-100">{{ business.location_text }}</p>
+                {% if business.instagram_url %}<a class="mt-2 inline-block underline" href="{{ business.instagram_url }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+            </div>
+        </div>
+    </footer>
+
+    {% if business.whatsapp_number %}
+        <a href="https://wa.me/{{ business.whatsapp_number }}" target="_blank" rel="noopener" class="fixed bottom-5 right-5 z-50 rounded-full bg-green-500 px-5 py-4 font-black text-white shadow-xl hover:bg-green-600">WhatsApp</a>
+    {% endif %}
+
+    <script src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>

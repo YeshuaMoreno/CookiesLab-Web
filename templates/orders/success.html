@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Gracias | {{ business.business_name }}{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-3xl px-4 py-20 text-center">
+    <div class="rounded-[2rem] bg-white p-10 shadow-2xl">
+        <div class="text-7xl">🍪</div>
+        <h1 class="mt-5 text-4xl font-black">¡Gracias por tu pedido!</h1>
+        <p class="mt-4 text-amber-900/70">Te contactaremos por WhatsApp para confirmar disponibilidad, entrega y método de pago.</p>
+        <a href="{% url 'catalog:menu' %}" class="mt-8 inline-block rounded-full bg-amber-900 px-7 py-3 font-black text-white hover:bg-amber-800">Volver al menú</a>
+    </div>
+</section>
+{% endblock %}
